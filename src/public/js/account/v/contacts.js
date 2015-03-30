@@ -133,9 +133,7 @@ define([
             });
         },
         afterStartChat: function (d) {
-            // console.log(d);
-            // app.routers.app.go('');
-            // app.views.account_home.activate();
+            app.routers.app.go('home');
         },
     });
 });
