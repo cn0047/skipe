@@ -132,8 +132,14 @@ define([
                 }
             });
         },
-        afterStartChat: function (d) {
+        afterStartChat: function (id) {
+            app.routers.app.navigate('');
             app.routers.app.go('home');
+            app.views.app.on('homeActivated', function () {
+                app.views.account_home.activeChatId = id;
+                app.views.account_home.getChats();
+                app.views.app.off('homeActivated');
+            });
         },
     });
 });

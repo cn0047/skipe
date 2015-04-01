@@ -15,6 +15,7 @@ define([
         tplChats: tChats,
         tplPosts: tPosts,
         tplUsersInChat: tUsersInChat,
+        activeChatId: '',
         events:{
             'click #mainChats a': 'activateChat',
             'click #mainPosts #showUsersOfChat': 'showUsersOfChat',
@@ -49,7 +50,11 @@ define([
         },
         renderChats: function (d) {
             this.$('#mainChats').html(_.template(this.tplChats)({data: d}));
-            this.$('#mainChats .list-group a:first').addClass('active');
+            if (_.isEmpty(this.activeChatId)) {
+                this.$('#mainChats .list-group a:first').addClass('active');
+            } else {
+                this.$('#mainChats .list-group a[data-chat='+this.activeChatId+']').addClass('active');
+            }
             this.$('#mainChats .settings #chatCaption').val(
                 this.$('#mainChats .list-group a:first').html()
             );
@@ -75,6 +80,7 @@ define([
                 this.$('#mainPosts #postsContainer').append(_.template(t)({v: v}));
             })
             app.views.app.hideLoading();
+            app.views.app.trigger('homeActivated');
         },
         activateChat: function (e) {
             this.hideUsersInChat();
