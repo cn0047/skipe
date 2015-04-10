@@ -80,6 +80,7 @@ app.init.views.app = Backbone.View.extend({
         });
         app.routers.app = new app.init.routers.app();
         Backbone.history.start();
+        this.initSocket();
     },
     loadNls: function (clb) {
         require(['text!/nls/'+this.locale+'.json'], function (f) {
@@ -107,6 +108,15 @@ app.init.views.app = Backbone.View.extend({
     },
     hideLoading: function () {
         this.$('footer #progress').addClass('hide');
+    },
+    initSocket: function () {
+        var socket = io.connect('http://localhost:3000');
+        socket.on('connect', function () {
+            socket.emit('addMe', '007');
+        });
+        socket.on('added', function (r) {
+            console.log(r);
+        });
     },
 });
 

@@ -10,7 +10,13 @@ var mongodb          = require('mongodb');
 var mailer           = require('nodemailer');
 var i18n             = require('i18n');
 var fs               = require('fs');
+var socketIo         = require('socket.io');
 var config           = require('./configs/main').config;
+var app              = express();
+var server           = app.listen(3000);
+var socket           = socketIo.listen(server);
+
+console.log('Listening on: http://localhost:3000/');
 
 mongodb.MongoClient.connect(config.mongo.url, function (err, db) {
     if (err) {
@@ -45,7 +51,6 @@ i18n.configure({
     updateFiles   : false,
 });
 
-var app = express();
 app.use(express.static('./public'));
 app.use(express.urlencoded());
 app.use(express.json());
@@ -67,5 +72,4 @@ app.all('/account/:action?', require('./routes/account').go);
 app.all('/guest/:action?', require('./routes/guest').go);
 app.all('*', require('./routes/guest').go);
 
-app.listen(3000);
-console.log('Listening on port 3000...');
+socket.sockets.on('connection', require('./sockets/account').go);
