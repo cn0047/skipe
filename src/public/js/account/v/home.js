@@ -56,7 +56,7 @@ define([
                 this.$('#mainChats .list-group a[data-chat='+this.activeChatId+']').addClass('active');
             }
             this.$('#mainChats .settings #chatCaption').val(
-                this.$('#mainChats .list-group a:first').html()
+                this.$('#mainChats .list-group a:first span:first').html()
             );
         },
         getPosts: function () {
@@ -89,7 +89,7 @@ define([
             this.$('#mainChats .list-group a').removeClass('active');
             this.$(e.currentTarget).addClass('active');
             this.$('#mainChats .settings #chatCaption').val(
-                this.$(e.currentTarget).html()
+                this.$(e.currentTarget).find('span:first').html()
             );
             this.getPosts();
         },
@@ -116,8 +116,25 @@ define([
             this.$('#mainPosts #postsContainer').append(
                 _.template(this.tplPosts)({v: d})
             );
-            // socet
+            d.user = app.views.account.user.get('token');
+            socket.emit('newPost', d);
             this.$('#newPost').val('');
+        },
+        incomingPost: function (d) {
+            if (this.getActiveChatId() === d.chat) {
+                this.$('#mainPosts #postsContainer').append(
+                    _.template(this.tplPosts)({v: d})
+                );
+            } else {
+                var $el = this.$('#mainChats .list-group a[data-chat='+d.chat+'] .badge');
+                if ($el.size()) {
+                    var i = parseInt($el.html());
+                    if (isNaN(i)) {
+                        i = 0;
+                    }
+                    $el.html(i+1);
+                }
+            }
         },
         hideUsersInChat: function () {
             if (!this.$('#mainPosts #mainUsersInChat').hasClass('hide')) {
