@@ -155,6 +155,38 @@ actions.POST.startChat = function (req, res) {
     });
 };
 
+/**
+ * @todo Security.
+ */
+actions.POST.renameChat = function (req, res) {
+    var chat = global.mongo.ObjectID(req.param('chat'));
+    var caption = req.param('caption');
+    global.mongo.collection('chat', function (err, collection) {
+        collection.update(
+            {_id: chat},
+            {$set : {caption: caption}},
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+            }
+        );
+    });
+    global.mongo.collection('usersInChat', function (err, collection) {
+        collection.update(
+            {'chat._id': chat},
+            {$set : {'chat.caption': caption}},
+            {multi: true},
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+            }
+        );
+    });
+    res.json([]);
+};
+
 actions.GET.getUser = function (req, res) {
     res.json(req.session.user);
 };
@@ -281,6 +313,30 @@ actions.GET.getContactInfo = function (req, res) {
                 res.json(doc);
             }
         );
+    });
+};
+
+actions.GET.getContactsNotInChat = function (req, res) {
+    // var chat = global.mongo.ObjectID(req.param('chat'));
+    // var user = global.mongo.ObjectID(req.param('user'));
+    // res.json([chat, user]);
+    req.checkParams('chat', res.__('chatUser')).isMongoId();
+    req.checkParams('user', res.__('invalidUser')).isMongoId();
+    var e = req.validationErrors();
+    if (e) {
+        res.json({errors: e});
+        return;
+    }
+    global.mongo.collection('usersInChat', function (err, collection) {
+        var args = {
+            'chat._id': global.mongo.ObjectID(req.param('chat')),
+            'user._id': {$ne: global.mongo.ObjectID(req.param('user'))}
+        };
+    //     collection.find(args, function (err, cursor) {
+    //         cursor.toArray(function (err, docs) {
+    //             res.json(docs);
+    //         });
+    //     });
     });
 };
 

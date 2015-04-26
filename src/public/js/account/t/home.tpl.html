@@ -2,12 +2,28 @@
     <div id="mainPosts" class="col-md-9 col-md-push-3">
         <div class="settings">
             <button
+                id="addPeopleToChat"
                 type="button"
                 class="btn btn-default btn-xs"
                 title="<%=app.nls.addPeopleToChat%>"
             >
-                <span class="glyphicon glyphicon-plus"></span>
+                <span class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#addPeopleToChatModal"></span>
             </button>
+            <div class="modal fade" id="addPeopleToChatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">
+                                <%=app.nls.addPeopleToChat%>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h4>
+                        </div>
+                        <div class="modal-body"><%=app.nls.loading%></div>
+                    </div>
+                </div>
+            </div>
             <div class="btn-group" data-toggle="buttons">
                 <label
                     id="showUsersOfChat"

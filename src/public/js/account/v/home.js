@@ -1,14 +1,16 @@
 define([
     '/js/account/c/chat.js',
+    '/js/account/m/chat.js',
     '/js/account/m/post.js',
     '/js/account/c/post.js',
     'text!/js/account/t/home.tpl.html',
     'text!/js/account/t/mainChats.tpl.html',
     'text!/js/account/t/mainPosts.tpl.html',
     'text!/js/account/t/mainUsersInChat.tpl.html'
-], function (cChat, mPost, cPost, t, tChats, tPosts, tUsersInChat) {
+], function (cChat, mChat, mPost, cPost, t, tChats, tPosts, tUsersInChat) {
     return  Backbone.skipeView.extend({
         cChat: new cChat(),
+        mChat: new mChat(),
         cPost: new cPost(),
         mPost: mPost,
         tpl: t,
@@ -19,11 +21,14 @@ define([
         events:{
             'click #mainChats a': 'activateChat',
             'click #mainPosts #showUsersOfChat': 'showUsersOfChat',
+            'click #mainPosts #addPeopleToChat': 'addPeopleToChat',
             'keypress #newPost': 'newPost',
+            'change #chatCaption': 'changeChatCaption',
         },
         initialize: function () {
             this.cPost.on('afterGetPosts', this.afterGetPosts, this);
             this.cChat.on('afterGetChats', this.afterGetChats, this);
+            this.mChat.on('afterRenameChat', this.afterRenameChat, this);
         },
         go: function () {
             this.renderIf();
@@ -166,5 +171,47 @@ define([
                 _.template(this.tplUsersInChat)({data: r})
             );
         },
+        changeChatCaption: function (e) {
+            var caption = this.$(e.currentTarget).val();
+            this.$('#mainChats .list-group .active span:first').html(caption);
+            var d = {
+                chat: this.getActiveChatId(),
+                caption: caption,
+            };
+            this.mChat.hash = 'renameChat';
+            this.mChat.save(d, {
+                success: function (m) {
+                    m.trigger('afterRenameChat', d);
+                }
+            });
+        },
+        /**
+         * @todo Fix it.
+         */
+        afterRenameChat: function (r) {
+            var $el = this.$('#mainChats .settings #chatCaption');
+            $el.animate({backgroundColor: '#dff0d8'}, 1000)
+                .animate({backgroundColor: '#fff'}, 1000);
+        },
+        addPeopleToChat: function () {
+            console.log(1);
+            // get contacts not in chat
+            var activeChatId = this.getActiveChatId();
+            var v = this;
+            this.cChat.find(function (m) {
+                if (m.get('chat')._id === activeChatId) {
+                    m.hash = 'getContactsNotInChat/chat/'+activeChatId+'/user/'+app.views.account.userId;
+                    m.on('afterGetContactsNotInChat', v.afterGetContactsNotInChat, v);
+                    m.fetch({
+                        success: function (m, r) {
+                            m.trigger('afterGetContactsNotInChat', r);
+                        }
+                    });
+                }
+            });
+        },
+        afterGetContactsNotInChat: function (r) {
+            console.log(r);
+        }
     });
 });
