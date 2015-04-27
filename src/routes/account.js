@@ -317,9 +317,6 @@ actions.GET.getContactInfo = function (req, res) {
 };
 
 actions.GET.getContactsNotInChat = function (req, res) {
-    // var chat = global.mongo.ObjectID(req.param('chat'));
-    // var user = global.mongo.ObjectID(req.param('user'));
-    // res.json([chat, user]);
     req.checkParams('chat', res.__('chatUser')).isMongoId();
     req.checkParams('user', res.__('invalidUser')).isMongoId();
     var e = req.validationErrors();
@@ -332,11 +329,27 @@ actions.GET.getContactsNotInChat = function (req, res) {
             'chat._id': global.mongo.ObjectID(req.param('chat')),
             'user._id': {$ne: global.mongo.ObjectID(req.param('user'))}
         };
-    //     collection.find(args, function (err, cursor) {
-    //         cursor.toArray(function (err, docs) {
-    //             res.json(docs);
-    //         });
-    //     });
+        collection.find(args, function (err, cursor) {
+            cursor.toArray(function (err, docs) {
+                var excludeUsers = docs.map(function (o) {
+                    return global.mongo.ObjectID(o.user._id);
+                });
+                global.mongo.collection('contact', function (err, collection) {
+                    collection.find(
+                        {
+                            owner: global.mongo.ObjectID(req.param('user')),
+                            'user._id': {$nin: excludeUsers}
+                        },
+                        {sort: ['user.sname', 'asc']},
+                        function (err, cursor) {
+                            cursor.toArray(function (err, docs) {
+                                res.json(docs);
+                            });
+                        }
+                    );
+                });
+            });
+        });
     });
 };
 

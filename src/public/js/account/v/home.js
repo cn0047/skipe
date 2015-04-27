@@ -194,8 +194,6 @@ define([
                 .animate({backgroundColor: '#fff'}, 1000);
         },
         addPeopleToChat: function () {
-            console.log(1);
-            // get contacts not in chat
             var activeChatId = this.getActiveChatId();
             var v = this;
             this.cChat.find(function (m) {
