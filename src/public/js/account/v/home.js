@@ -6,8 +6,9 @@ define([
     'text!/js/account/t/home.tpl.html',
     'text!/js/account/t/mainChats.tpl.html',
     'text!/js/account/t/mainPosts.tpl.html',
+    'text!/js/account/t/addPeopleToChat.tpl.html',
     'text!/js/account/t/mainUsersInChat.tpl.html'
-], function (cChat, mChat, mPost, cPost, t, tChats, tPosts, tUsersInChat) {
+], function (cChat, mChat, mPost, cPost, t, tChats, tPosts, tAddPeopleToChat, tUsersInChat) {
     return  Backbone.skipeView.extend({
         cChat: new cChat(),
         mChat: new mChat(),
@@ -16,6 +17,7 @@ define([
         tpl: t,
         tplChats: tChats,
         tplPosts: tPosts,
+        tplAddPeopleToChat: tAddPeopleToChat,
         tplUsersInChat: tUsersInChat,
         activeChatId: '',
         events:{
@@ -24,6 +26,7 @@ define([
             'click #mainPosts #addPeopleToChat': 'addPeopleToChat',
             'keypress #newPost': 'newPost',
             'change #chatCaption': 'changeChatCaption',
+            'click #addPeopleToChatModal a': 'addSelectedUserToChat',
         },
         initialize: function () {
             this.cPost.on('afterGetPosts', this.afterGetPosts, this);
@@ -190,6 +193,7 @@ define([
          */
         afterRenameChat: function (r) {
             var $el = this.$('#mainChats .settings #chatCaption');
+            // .effect('highlight', 'fast');
             $el.animate({backgroundColor: '#dff0d8'}, 1000)
                 .animate({backgroundColor: '#fff'}, 1000);
         },
@@ -209,7 +213,16 @@ define([
             });
         },
         afterGetContactsNotInChat: function (r) {
-            console.log(r);
-        }
+            this.$('#addPeopleToChatModal .modal-body').html(
+                _.template(this.tplAddPeopleToChat)({data: r})
+            );
+        },
+        addSelectedUserToChat: function (e) {
+            this.$('#addPeopleToChatModal').modal('toggle');
+            // this.getActiveChatId(),
+            // this.$('#mainChats .settings #chatCaption').val() // chat caption
+            // this.$(e.currentTarget).attr('data-userId')
+            // this.$(e.currentTarget).html() // sname
+        },
     });
 });
