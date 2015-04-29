@@ -40,6 +40,7 @@ global.mail = mailer.createTransport(config.mail.type, {
 global.validator = {
     pattern: {
         sname: /^[\w\s\_\-\=\+@]+$/,
+        richString: /^[\w\d\s\?\.\,\!\:\;\@\#\$\%\&\*\(\)\-\=\+\'\"]+$/,
     }
 };
 global.demoUser = config.demoUser;

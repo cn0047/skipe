@@ -187,6 +187,39 @@ actions.POST.renameChat = function (req, res) {
     res.json([]);
 };
 
+actions.POST.addSelectedUserToChat = function (req, res) {
+    req.checkBody('chat', res.__('invalidChat')).isMongoId();
+    req.checkBody('caption', res.__('invalidChatCaption')).matches(global.validator.pattern.richString);
+    req.checkBody('user', res.__('invalidUser')).isMongoId();
+    req.checkBody('sname', res.__('invalidScreenName')).matches(global.validator.pattern.sname);
+    var e = req.validationErrors();
+    if (e) {
+        res.json({errors: e});
+        return;
+    }
+    global.mongo.collection('usersInChat', function (err, collection) {
+        collection.insert(
+            {
+                chat: {
+                    _id: global.mongo.ObjectID(req.param('chat')),
+                    caption: req.param('caption')
+                },
+                user: {
+                    _id: global.mongo.ObjectID(req.param('user')),
+                    sname: req.param('sname')
+                }
+            },
+            function (err, docs) {
+                if (err) {
+                    res.json({errors: err});
+                    return;
+                }
+                res.json({success: true});
+            }
+        );
+    });
+};
+
 actions.GET.getUser = function (req, res) {
     res.json(req.session.user);
 };

@@ -192,10 +192,10 @@ define([
          * @todo Fix it.
          */
         afterRenameChat: function (r) {
-            var $el = this.$('#mainChats .settings #chatCaption');
+            // var $el = this.$('#mainChats .settings #chatCaption');
             // .effect('highlight', 'fast');
-            $el.animate({backgroundColor: '#dff0d8'}, 1000)
-                .animate({backgroundColor: '#fff'}, 1000);
+            // $el.animate({backgroundColor: '#dff0d8'}, 1000)
+                // .animate({backgroundColor: '#fff'}, 1000);
         },
         addPeopleToChat: function () {
             var activeChatId = this.getActiveChatId();
@@ -218,11 +218,29 @@ define([
             );
         },
         addSelectedUserToChat: function (e) {
-            this.$('#addPeopleToChatModal').modal('toggle');
-            // this.getActiveChatId(),
-            // this.$('#mainChats .settings #chatCaption').val() // chat caption
-            // this.$(e.currentTarget).attr('data-userId')
-            // this.$(e.currentTarget).html() // sname
+            // this.$('#addPeopleToChatModal').modal('toggle');
+            var activeChatId = this.getActiveChatId();
+            var d = {
+                chat: activeChatId,
+                caption: this.$('#mainChats .settings #chatCaption').val(),
+                user: this.$(e.currentTarget).attr('data-userId'),
+                sname: this.$(e.currentTarget).html(),
+            };
+            var v = this;
+            this.cChat.find(function (m) {
+                if (m.get('chat')._id === activeChatId) {
+                    m.hash = 'addSelectedUserToChat/';
+                    m.on('afterAddSelectedUserToChat', v.afterAddSelectedUserToChat, this);
+                    m.save(d, {
+                        success: function (m) {
+                            m.trigger('afterAddSelectedUserToChat', d);
+                        }
+                    });
+                }
+            });
+        },
+        afterAddSelectedUserToChat: function (r) {
+            console.log(r);
         },
     });
 });
