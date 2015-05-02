@@ -233,14 +233,14 @@ define([
                     m.on('afterAddSelectedUserToChat', v.afterAddSelectedUserToChat, this);
                     m.save(d, {
                         success: function (m) {
-                            m.trigger('afterAddSelectedUserToChat', d);
+                            m.trigger('afterAddSelectedUserToChat', d, e);
                         }
                     });
                 }
             });
         },
-        afterAddSelectedUserToChat: function (r) {
-            console.log(r);
+        afterAddSelectedUserToChat: function (d, e) {
+            this.$(e.currentTarget).remove();
         },
     });
 });

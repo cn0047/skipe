@@ -51,6 +51,7 @@ db.contact.find({"owner" : ObjectId("54b23de857fe2afb0c1182bf")});
 /*
 CHAT
 */
+db.chat.remove({});
 db.chat.insert({ "_id" : ObjectId("54b8b991c0eceb8b5083c1c2"), "caption" : "mi6" });
 db.chat.insert({ "_id" : ObjectId("54b8b995c0eceb8b5083c1c3"), "caption" : "organization" });
 db.chat.insert({ "_id" : ObjectId("54b8b996c0eceb8b5083c1c4"), "caption" : "Casino Royale" });
@@ -73,7 +74,6 @@ db.post.remove({});
 // db.post.insert({chat: {"$ref" : "chat", "$id" : ObjectId("54b8c04bc0eceb8b5083c1cc"), "$db" : "skipe"}, user: "James Bond", date: ISODate("2006-11-14T10:01:53Z"), text: "Ok. Got it!"});
 // db.post.insert({chat: {"$ref" : "chat", "$id" : ObjectId("54dbac3e0b3ade33b8bb944a"), "$db" : "skipe"}, user: "James Bond", date: ISODate("2008-11-14T11:01:53Z"), text: "Hi, Darling!"});
 // db.post.insert({chat: {"$ref" : "chat", "$id" : ObjectId("54dbac3e0b3ade33b8bb944a"), "$db" : "skipe"}, user: "Vesper Lynd", date: ISODate("2008-11-14T11:01:59Z"), text: "Don't hi, agent. I don't give you money..."});
-
 // db.post.insert({chat: {_id: ObjectId("54b8c04bc0eceb8b5083c1cc"), caption: "M with Bond"}, user : "M",           date : "2006-11-14T10:00:35Z",     text : "You are now agent with two zeros!" });
 // db.post.insert({chat: {_id: ObjectId("54b8c04bc0eceb8b5083c1cc"), caption: "M with Bond"}, user : "James Bond",  date : "2006-11-14T10:00:47Z",     text : "I will not fail!" });
 // db.post.insert({chat: {_id: ObjectId("54b8c04bc0eceb8b5083c1cc"), caption: "M with Bond"}, user : "M",           date : "2006-11-14T10:00:53Z",     text : "That's the cards in your hands..." });
@@ -91,6 +91,7 @@ db.post.insert({chat: ObjectId("54b8c04bc0eceb8b5083c1cc"), user : "M",         
 db.post.insert({chat: ObjectId("54b8c04bc0eceb8b5083c1cc"), user : "James Bond",  date : "2006-11-14T10:00:47Z",     text : "I will not fail!" });
 db.post.insert({chat: ObjectId("54b8c04bc0eceb8b5083c1cc"), user : "M",           date : "2006-11-14T10:00:53Z",     text : "That's the cards in your hands..." });
 db.post.insert({chat: ObjectId("54b8c04bc0eceb8b5083c1cc"), user : "James Bond",  date : "2006-11-14T10:01:53Z",     text : "Ok. Got it!" });
+db.post.insert({chat: ObjectId("54b8c04bc0eceb8b5083c1cc"), user : "James Bond",  date : "2006-11-14T10:02:23Z",     text : "but i need something like: <img src='http://www.jamesbondlifestyle.com/sites/default/files/styles/semi_width_image/public/images/product/ac016-aston-martin-keychain-screenshot.jpg?itok=s-uPNL3b'>" });
 db.post.insert({chat: ObjectId("54dbac3e0b3ade33b8bb944a"), user : "James Bond",  date : "2008-11-14T11:01:53Z",     text : "Hi, Darling!" });
 db.post.insert({chat: ObjectId("54dbac3e0b3ade33b8bb944a"), user : "Vesper Lynd", date : "2008-11-14T11:01:59Z",     text : "Don't hi, agent. I don't give you money..." });
 db.post.insert({chat: ObjectId("54dbac3e0b3ade33b8bb944a"), user : "James Bond",  date : "2015-02-21T22:17:57.308Z", text : "why you so cold to me?" });
