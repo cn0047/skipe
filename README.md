@@ -6,6 +6,7 @@ Skipe
 Here you can share with your friends photos, videos and whatever you wish in own chat room!
 
 For example:
+<br>
 ![image1]
 
 Based on: node.js, express, mongodb, backbone.js, socket.io and else...
