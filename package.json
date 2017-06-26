@@ -15,5 +15,8 @@
         "nodemailer": "*",
         "nodemon": "*",
         "socket.io": "*"
+    },
+    "scripts": {
+        "start": "node src/app.js"
     }
 }
