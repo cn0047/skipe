@@ -13,10 +13,13 @@ var fs               = require('fs');
 var socketIo         = require('socket.io');
 var config           = require('./configs/main').config;
 var app              = express();
-var server           = app.listen(3000);
+var host             = process.env.ENV === 'prod' ? 'https://skipe.herokuapp.com' : 'http://localhost';
+var socketIoJs       = (process.env.ENV === 'prod' ? host : '') + '/socket.io/socket.io.js';
+var port             = process.env.PORT || 3000;
+var server           = app.listen(port);
 var socket           = socketIo.listen(server);
 
-console.log('Listening on: http://localhost:3000/');
+console.log('Listening...');
 
 mongodb.MongoClient.connect(config.mongo.url, function (err, db) {
     if (err) {
